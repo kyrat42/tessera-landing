@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { Resend } from 'resend'
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_ANON_KEY!,
 )
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -34,6 +37,14 @@ export async function POST(req: NextRequest) {
       }
       throw error
     }
+
+    // Notify developer of new signup
+    await resend.emails.send({
+      from:    'Tessera Signups <admin@tesseraplanner.app>',
+      to:      'admin@tesseraplanner.app',
+      subject: `New beta signup — ${email}`,
+      text:    `New beta signup!\n\nEmail: ${email}\nPlatform: ${platform ?? 'not specified'}\n`,
+    })
 
     return NextResponse.json({ success: true })
   } catch (err) {
