@@ -39,12 +39,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Notify developer of new signup
-    await resend.emails.send({
+    const { data: emailData, error: emailError } = await resend.emails.send({
       from:    'Tessera Signups <admin@tesseraplanner.app>',
       to:      'admin@tesseraplanner.app',
       subject: `New beta signup — ${email}`,
       text:    `New beta signup!\n\nEmail: ${email}\nPlatform: ${platform ?? 'not specified'}\n`,
     })
+    if (emailError) console.error('[resend]', emailError)
+    else console.log('[resend] email sent:', emailData?.id)
 
     return NextResponse.json({ success: true })
   } catch (err) {
