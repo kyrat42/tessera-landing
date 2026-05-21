@@ -148,10 +148,10 @@ export default function PrivacyPage() {
             If you have any questions or requests regarding this privacy policy, please
             contact us at{' '}
             <a
-              href="mailto:privacy@tesseraplanner.app"
+              href="mailto:admin@tesseraplanner.app"
               style={{ color: '#7B5FFF' }}
             >
-              privacy@tesseraplanner.app
+              admin@tesseraplanner.app
             </a>.
           </p>
         </Section>

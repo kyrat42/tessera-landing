@@ -316,9 +316,14 @@ export default function Page() {
           <span className="font-semibold text-sm" style={{ color: '#1C1C2E' }}>Tessera</span>
         </div>
         <p className="text-sm" style={{ color: '#9899A6' }}>© 2026 Tessera. All rights reserved.</p>
-        <Link href="/privacy" className="text-sm mt-2 inline-block hover:underline" style={{ color: '#9899A6' }}>
-          Privacy Policy
-        </Link>
+        <div className="flex items-center justify-center gap-4 mt-2">
+          <Link href="/privacy" className="text-sm hover:underline" style={{ color: '#9899A6' }}>
+            Privacy Policy
+          </Link>
+          <Link href="/account-deletion" className="text-sm hover:underline" style={{ color: '#9899A6' }}>
+            Account Deletion
+          </Link>
+        </div>
       </footer>
 
     </main>
