@@ -136,17 +136,23 @@ export default function SignupForm({ dark = false }: Props) {
 
         <button
           type="submit"
-          disabled={status === 'loading'}
+          disabled={status === 'loading' || !platform}
           className="w-full rounded-xl px-6 py-3 text-sm font-semibold transition-opacity"
           style={{
             backgroundColor: dark ? '#fff' : '#7B5FFF',
             color:           dark ? '#7B5FFF' : '#fff',
-            opacity:         status === 'loading' ? 0.65 : 1,
+            opacity:         status === 'loading' || !platform ? 0.45 : 1,
             boxShadow:       dark ? 'none' : '0 4px 14px rgba(123,95,255,0.35)',
+            cursor:          !platform ? 'not-allowed' : 'pointer',
           }}
         >
           {status === 'loading' ? 'Joining…' : 'Join the Beta'}
         </button>
+        {!platform && (
+          <p className="text-xs text-center" style={{ color: dark ? 'rgba(255,255,255,0.5)' : '#9899A6' }}>
+            Select your device above to continue
+          </p>
+        )}
         <p
           className="text-xs text-center leading-relaxed"
           style={{ color: dark ? 'rgba(255,255,255,0.5)' : '#9899A6' }}
