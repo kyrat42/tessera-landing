@@ -315,6 +315,11 @@ export default function Page() {
           <TesseraLogo size={22} />
           <span className="font-semibold text-sm" style={{ color: '#1C1C2E' }}>Tessera</span>
         </div>
+        <div className="flex justify-center mb-4">
+          <a href="https://betabound.com/tessera-private-beta/" target="_blank" rel="noopener noreferrer">
+            <img decoding="async" src="https://betabound.com/wp-content/uploads/2024/07/Betabound-Badge-2.png" alt="Listed on Betabound" style={{ height: 48 }} />
+          </a>
+        </div>
         <p className="text-sm" style={{ color: '#9899A6' }}>© 2026 Tessera. All rights reserved.</p>
         <div className="flex items-center justify-center gap-4 mt-2">
           <Link href="/privacy" className="text-sm hover:underline" style={{ color: '#9899A6' }}>
