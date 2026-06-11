@@ -1,6 +1,7 @@
 import Link        from 'next/link'
 import TesseraLogo from '@/components/TesseraLogo'
 import SignupForm   from '@/components/SignupForm'
+import PhoneFrame   from '@/components/PhoneFrame'
 import {
   IoBriefcaseOutline,
   IoHeartOutline,
@@ -120,6 +121,48 @@ const STEPS = [
   { num: '01', title: 'Pick your tiles', body: 'Choose the areas of life that make up your unique mosaic.' },
   { num: '02', title: 'Set your rhythm', body: 'Build a weekly template that carves out time for each area.' },
   { num: '03', title: 'Plan your day',   body: 'Start each morning with clarity on exactly where to focus.' },
+]
+
+interface WalkthroughStep {
+  num:     string
+  caption: string
+  image:   string
+  alt:     string
+  frame?:  'phone' | 'card'
+}
+
+const WALKTHROUGH_STEPS: WalkthroughStep[] = [
+  {
+    num:     '1',
+    caption: 'Set your areas of life that you want to maintain in balance.',
+    image:   '/screenshots/areas-of-life.png',
+    alt:     'Areas of Life settings screen showing Work, Health, Social, Family, Fun, and Household tiles',
+  },
+  {
+    num:     '2',
+    caption: 'Set your weekly routine.',
+    image:   '/screenshots/weekly-template.png',
+    alt:     'Weekly Template settings screen showing Monday blocks for All Day, Health, Work, Family, Health, and Bedtime',
+  },
+  {
+    num:     '3',
+    caption: 'Keep track of where you’re spending your time.',
+    image:   '/screenshots/weekly-hours.jpeg',
+    alt:     'Weekly Hours by Area card showing hours per week for Work, Health, Social, Family, Fun, and Household',
+    frame:   'card',
+  },
+  {
+    num:     '4',
+    caption: 'Customize your priority levels if high, medium, and low isn’t your preference.',
+    image:   '/screenshots/priority-levels.png',
+    alt:     'Priority Levels settings screen showing Urgent and important, Important but not urgent, Urgent but not important, and Not important and not urgent',
+  },
+  {
+    num:     '5',
+    caption: 'Add a task list within your tiles. Work through this list during the time slot you set. Mark each task complete when you’re done, and watch your productivity grow.',
+    image:   '/screenshots/planner-day.png',
+    alt:     'Planner day view for Thursday, June 11 showing Health, Work, and Family blocks with tasks and priority numbers',
+  },
 ]
 
 // ── Page ─────────────────────────────────────────────────────────────────────
@@ -274,6 +317,51 @@ export default function Page() {
                 </div>
                 <h3 className="text-base font-bold mb-2" style={{ color: '#1C1C2E' }}>{title}</h3>
                 <p className="text-sm leading-relaxed" style={{ color: '#5C5C7A' }}>{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── App walkthrough ──────────────────────────────────────────────── */}
+      <section className="py-24 px-6">
+        <div className="max-w-4xl mx-auto">
+          <h2
+            className="text-3xl sm:text-4xl font-bold text-center mb-3"
+            style={{ color: '#1C1C2E', letterSpacing: '-0.01em' }}
+          >
+            See it in action
+          </h2>
+          <p className="text-center text-lg mb-16" style={{ color: '#5C5C7A' }}>
+            A quick look at how Tessera fits into your day.
+          </p>
+          <div className="flex flex-col gap-20">
+            {WALKTHROUGH_STEPS.map(({ num, caption, image, alt, frame = 'phone' }, i) => (
+              <div
+                key={num}
+                className={`flex flex-col items-center gap-10 ${i % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'}`}
+              >
+                <div className="flex-shrink-0">
+                  {frame === 'phone' ? (
+                    <PhoneFrame src={image} alt={alt} />
+                  ) : (
+                    <div style={{ width: 280, borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 64px rgba(58,63,204,0.25)', lineHeight: 0 }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={image} alt={alt} style={{ width: '100%', display: 'block' }} />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 text-center lg:text-left">
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold mb-5 mx-auto lg:mx-0"
+                    style={{ backgroundColor: 'rgba(123,95,255,0.1)', color: '#7B5FFF' }}
+                  >
+                    {num}
+                  </div>
+                  <p className="text-xl font-semibold leading-relaxed max-w-md mx-auto lg:mx-0" style={{ color: '#1C1C2E' }}>
+                    {caption}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
