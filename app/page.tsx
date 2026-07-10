@@ -209,7 +209,8 @@ export default function Page() {
           Piece together<br />a life you love.
         </h1>
         <p className="mt-6 text-lg max-w-md leading-relaxed" style={{ color: '#5C5C7A' }}>
-          A mindful daily planner that helps you build balance across every area of life.
+          A mindful daily planner that helps you build balance across every area of life
+          &mdash; all in one place, instead of scattered across a dozen different apps.
         </p>
         <div className="mt-10 w-full max-w-md">
           <SignupForm />
@@ -365,6 +366,23 @@ export default function Page() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Testimonial ──────────────────────────────────────────────────── */}
+      <section className="py-24 px-6" style={{ backgroundColor: 'rgba(255,255,255,0.32)' }}>
+        <div className="max-w-2xl mx-auto text-center">
+          <p
+            className="text-2xl sm:text-3xl font-semibold leading-relaxed"
+            style={{ color: '#1C1C2E', letterSpacing: '-0.01em' }}
+          >
+            &ldquo;Instead of relying on scattered notes, calendar reminders, and to-do
+            lists, I have a more structured way to keep track of my priorities and
+            responsibilities.&rdquo;
+          </p>
+          <p className="mt-6 text-sm font-semibold" style={{ color: '#7B5FFF' }}>
+            &mdash; Tessera Beta Tester
+          </p>
         </div>
       </section>
 
