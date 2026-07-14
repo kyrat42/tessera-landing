@@ -10,7 +10,14 @@ import {
   IoRepeatOutline,
   IoLayersOutline,
   IoBarChartOutline,
+  IoSunnyOutline,
+  IoMailOutline,
+  IoAlarmOutline,
+  IoClipboardOutline,
+  IoBookOutline,
+  IoNotificationsOutline,
 } from 'react-icons/io5'
+import { SiGooglecalendar, SiGooglekeep } from 'react-icons/si'
 import type { IconType } from 'react-icons'
 
 // ── Palette (mirrors lib/constants/palette.ts exactly) ───────────────────────
@@ -20,6 +27,7 @@ const P = {
   forest: { light: '#D4F5E4', dark: '#2EBD6B' },
   clay:   { light: '#FFE8D6', dark: '#FF7340' },
   teal:   { light: '#D0F5F0', dark: '#00B09B' },
+  honey:  { light: '#FFF8CC', dark: '#D4A000' },
 }
 
 // ── Style helpers ─────────────────────────────────────────────────────────────
@@ -85,6 +93,53 @@ const MOSAIC_TILES: MosaicTile[] = [
   { label: 'Creative', Icon: IoColorPaletteOutline,  iconColor: P.forest.dark,          size: 120, tileStyle: { ...flatTile(P.forest.light), width: 120, height: 120 } },
 ]
 
+// ── "Scattered tools" funnel animation ──────────────────────────────────────
+// Icons chosen to mirror the tools beta testers actually named in survey
+// responses (Google Calendar, Outlook, Google Keep, alarms, to-do lists,
+// paper planners) — see tessera-landing/MARKETING-IDEAS.md's "scattered" theme.
+interface ScatteredTool {
+  label: string
+  Icon:  IconType
+  angle: number // degrees, 0 = right, -90 = up
+}
+
+const SCATTERED_TOOLS: ScatteredTool[] = [
+  { label: 'Google Calendar', Icon: SiGooglecalendar,   angle: -90 },
+  { label: 'Outlook',         Icon: IoMailOutline,      angle: -30 },
+  { label: 'Google Keep',     Icon: SiGooglekeep,       angle:  30 },
+  { label: 'Alarms',          Icon: IoAlarmOutline,     angle:  90 },
+  { label: 'To-Do Lists',     Icon: IoClipboardOutline, angle: 150 },
+  { label: 'Paper Planner',   Icon: IoBookOutline,      angle: 210 },
+]
+
+const FUNNEL_RADIUS       = 130 // px from center
+const FUNNEL_CHIP_SIZE    = 72  // px, must match the chip's width/height below
+const FUNNEL_LOOP_SECONDS = 5.4
+
+// Each chip travels a different distance to the center, so it needs its own
+// @keyframes rule (see globals.css comment) rather than one shared animation
+// driven by a per-element CSS custom property — several browsers only resolve
+// var()-in-calc() against the first element sharing a given keyframe name.
+const FUNNEL_TOOLS = SCATTERED_TOOLS.map((tool, i) => {
+  const rad    = (tool.angle * Math.PI) / 180
+  const dx     = Math.round(Math.cos(rad) * FUNNEL_RADIUS)
+  const dy     = Math.round(Math.sin(rad) * FUNNEL_RADIUS)
+  const center = -FUNNEL_CHIP_SIZE / 2
+  return {
+    ...tool,
+    animationName: `funnel-in-${i}`,
+    delay:         Number(((i * FUNNEL_LOOP_SECONDS) / SCATTERED_TOOLS.length).toFixed(2)),
+    keyframesCSS:  `
+      @keyframes funnel-in-${i} {
+        0%   { transform: translate(${dx + center}px, ${dy + center}px) scale(1); opacity: 0; }
+        12%  { opacity: 1; }
+        75%  { opacity: 1; transform: translate(${Math.round(dx * 0.1) + center}px, ${Math.round(dy * 0.1) + center}px) scale(0.5); }
+        100% { transform: translate(${center}px, ${center}px) scale(0.2); opacity: 0; }
+      }
+    `,
+  }
+})
+
 interface Feature {
   Icon:      IconType
   iconColor: string
@@ -114,6 +169,20 @@ const FEATURES: Feature[] = [
     palette:   P.clay,
     title:     'Priorities that flex',
     body:      'Within each tile, a task list with dynamic priority levels keeps you focused on what matters most right now instead of a rigid plan made weeks in advance.',
+  },
+  {
+    Icon:      IoSunnyOutline,
+    iconColor: P.teal.dark,
+    palette:   P.teal,
+    title:     'Forgiving on the hard days',
+    body:      'Some days don\'t go as planned, and Tessera doesn\'t punish you for it. Anything left unfinished quietly resurfaces the next morning, so a rough day never turns into a lost task.',
+  },
+  {
+    Icon:      IoNotificationsOutline,
+    iconColor: P.honey.dark,
+    palette:   P.honey,
+    title:     'Never carry it all in your head',
+    body:      'Add a reminder to anything you don\'t want to forget, and Tessera will nudge you right when it matters.',
   },
 ]
 
@@ -165,6 +234,24 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
   },
 ]
 
+// Sourced from consented beta survey responses — see
+// tessera-landing/MARKETING-IDEAS.md for full context on each quote.
+interface Testimonial {
+  quote: string
+}
+
+const TESTIMONIALS: Testimonial[] = [
+  {
+    quote: 'Instead of relying on scattered notes, calendar reminders, and to-do lists, I have a more structured way to keep track of my priorities and responsibilities.',
+  },
+  {
+    quote: 'Helped me keep track and prioritize my tasks better, as well as calculate how much time I’m spending in each area.',
+  },
+  {
+    quote: 'Maps the few activities I have per week organized by specific time instead of just as a list.',
+  },
+]
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Page() {
@@ -210,14 +297,77 @@ export default function Page() {
         </h1>
         <p className="mt-6 text-lg max-w-md leading-relaxed" style={{ color: '#5C5C7A' }}>
           A mindful daily planner that helps you build balance across every area of life
-          &mdash; all in one place, instead of scattered across a dozen different apps.
+          - Keep everything all in one place, instead of scattered across a dozen different apps.
         </p>
         <div className="mt-10 w-full max-w-md">
           <SignupForm />
         </div>
-        <p className="mt-4 text-sm" style={{ color: '#9899A6' }}>
-          Android &amp; iOS beta coming soon. Be among the first to get access.
-        </p>
+      </section>
+
+      {/* ── Scattered tools → Tessera ─────────────────────────────────────── */}
+      <section className="py-24 px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2
+            className="text-3xl sm:text-4xl font-bold mb-3"
+            style={{ color: '#1C1C2E', letterSpacing: '-0.01em' }}
+          >
+            One place, not a dozen tabs
+          </h2>
+          <p className="text-lg mb-16 max-w-xl mx-auto" style={{ color: '#5C5C7A' }}>
+            Tessera beta testers came in juggling calendars, sticky notes, alarms,
+            and paper planners that never talked to each other. Tessera replaces all of it.
+          </p>
+
+          {/* eslint-disable-next-line react/no-danger */}
+          <style dangerouslySetInnerHTML={{ __html: FUNNEL_TOOLS.map(t => t.keyframesCSS).join('\n') }} />
+
+          <div className="relative mx-auto" style={{ width: 340, height: 340 }}>
+            {/* Destination: Tessera logo, pulsing gently as tools arrive */}
+            <div
+              className="absolute tessera-target"
+              style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+            >
+              <TesseraLogo size={88} />
+            </div>
+
+            {/* Scattered tool chips, funneling inward on a loop */}
+            {FUNNEL_TOOLS.map(({ label, Icon, animationName, delay }) => (
+              <div
+                key={label}
+                className="absolute tool-chip"
+                style={{
+                  top:                  '50%',
+                  left:                 '50%',
+                  animationName,
+                  animationDuration:    `${FUNNEL_LOOP_SECONDS}s`,
+                  animationTimingFunction: 'ease-in',
+                  animationIterationCount: 'infinite',
+                  animationDelay:       `${delay}s`,
+                }}
+              >
+                <div
+                  className="flex flex-col items-center justify-center gap-1"
+                  style={{
+                    width:           FUNNEL_CHIP_SIZE,
+                    height:          FUNNEL_CHIP_SIZE,
+                    borderRadius:    18,
+                    backgroundColor: '#FFFFFF',
+                    border:          '1.5px solid rgba(255,255,255,0.8)',
+                    boxShadow:       '0 4px 14px rgba(58,95,204,0.12)',
+                  }}
+                >
+                  <Icon size={20} color="#9899A6" />
+                  <span
+                    className="text-[9px] font-semibold leading-none text-center px-1"
+                    style={{ color: '#9899A6' }}
+                  >
+                    {label}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ── Mosaic concept ────────────────────────────────────────────────── */}
@@ -271,11 +421,11 @@ export default function Page() {
             Most planners are built for perfect days. Tessera is built for real ones.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {FEATURES.map(({ Icon, iconColor, palette, title, body }) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {FEATURES.map(({ Icon, iconColor, palette, title, body }, i) => (
               <div
                 key={title}
-                className="rounded-2xl p-6"
+                className={`rounded-2xl p-6 ${i === FEATURES.length - 1 && FEATURES.length % 2 === 1 ? 'md:col-span-2' : ''}`}
                 style={{
                   backgroundColor: 'rgba(255,255,255,0.55)',
                   border:          '1px solid rgba(255,255,255,0.8)',
@@ -369,20 +519,37 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ── Testimonial ──────────────────────────────────────────────────── */}
+      {/* ── Testimonials ──────────────────────────────────────────────────── */}
       <section className="py-24 px-6" style={{ backgroundColor: 'rgba(255,255,255,0.32)' }}>
-        <div className="max-w-2xl mx-auto text-center">
-          <p
-            className="text-2xl sm:text-3xl font-semibold leading-relaxed"
+        <div className="max-w-5xl mx-auto">
+          <h2
+            className="text-3xl font-bold text-center mb-14"
             style={{ color: '#1C1C2E', letterSpacing: '-0.01em' }}
           >
-            &ldquo;Instead of relying on scattered notes, calendar reminders, and to-do
-            lists, I have a more structured way to keep track of my priorities and
-            responsibilities.&rdquo;
-          </p>
-          <p className="mt-6 text-sm font-semibold" style={{ color: '#7B5FFF' }}>
-            &mdash; Tessera Beta Tester
-          </p>
+            What beta testers are saying
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {TESTIMONIALS.map(({ quote }) => (
+              <div
+                key={quote}
+                className="rounded-2xl p-6 flex flex-col"
+                style={{
+                  backgroundColor: 'rgba(255,255,255,0.55)',
+                  border:          '1px solid rgba(255,255,255,0.8)',
+                  borderTopColor:  'rgba(255,255,255,0.97)',
+                  boxShadow:       '0 4px 24px rgba(58,95,204,0.07)',
+                  backdropFilter:  'blur(8px)',
+                }}
+              >
+                <p className="text-base leading-relaxed font-medium" style={{ color: '#1C1C2E' }}>
+                  &ldquo;{quote}&rdquo;
+                </p>
+                <p className="mt-5 text-sm font-semibold" style={{ color: '#7B5FFF' }}>
+                  &mdash; Tessera Beta Tester
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

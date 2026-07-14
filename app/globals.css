@@ -21,3 +21,25 @@ body {
 input::placeholder {
   color: #9899A6;
 }
+
+/* ── "Scattered tools" funnel animation (see app/page.tsx) ─────────────────
+   Per-chip keyframes are generated inline in page.tsx (each chip travels a
+   different distance to the center), rather than shared via a CSS custom
+   property + calc() — some browsers only resolve --dx/--dy against the first
+   element using a given @keyframes name, silently no-op-ing the rest. */
+@keyframes tessera-pulse {
+  0%, 78%, 100% { box-shadow: 0 0 0 0 rgba(123,95,255,0); }
+  90%           { box-shadow: 0 0 0 18px rgba(123,95,255,0.12); }
+}
+
+.tessera-target {
+  border-radius: 9999px;
+  animation: tessera-pulse 5.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-chip,
+  .tessera-target {
+    animation: none !important;
+  }
+}
