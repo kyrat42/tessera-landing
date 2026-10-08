@@ -1,7 +1,7 @@
-import Link        from 'next/link'
-import TesseraLogo from '@/components/TesseraLogo'
-import SignupForm   from '@/components/SignupForm'
-import PhoneFrame   from '@/components/PhoneFrame'
+import Link          from 'next/link'
+import TesseraLogo   from '@/components/TesseraLogo'
+import PlatformLinks from '@/components/PlatformLinks'
+import PhoneFrame     from '@/components/PhoneFrame'
 import {
   IoBriefcaseOutline,
   IoHeartOutline,
@@ -204,45 +204,47 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
   {
     num:     '1',
     caption: 'Set your areas of life that you want to maintain in balance.',
-    image:   '/screenshots/areas-of-life.png',
+    image:   '/screenshots/areas-of-life.jpg',
     alt:     'Areas of Life settings screen showing Work, Health, Social, Family, Fun, and Household tiles',
   },
   {
     num:     '2',
     caption: 'Set your weekly routine.',
-    image:   '/screenshots/weekly-template.png',
-    alt:     'Weekly Template settings screen showing Monday blocks for All Day, Health, Work, Family, Health, and Bedtime',
+    image:   '/screenshots/weekly-template.jpg',
+    alt:     'Weekly Template settings screen showing a week-starts-on day picker and a 7-day grid with Work, Health, Social, and Family blocks ending at a bedtime marker each night',
   },
   {
     num:     '3',
     caption: 'Keep track of where you’re spending your time.',
-    image:   '/screenshots/weekly-hours.jpeg',
+    image:   '/screenshots/weekly-hours.jpg',
     alt:     'Weekly Hours by Area card showing hours per week for Work, Health, Social, Family, Fun, and Household',
     frame:   'card',
   },
   {
     num:     '4',
     caption: 'Customize your priority levels if high, medium, and low isn’t your preference.',
-    image:   '/screenshots/priority-levels.png',
-    alt:     'Priority Levels settings screen showing Urgent and important, Important but not urgent, Urgent but not important, and Not important and not urgent',
+    image:   '/screenshots/priority-levels.jpg',
+    alt:     'Priority Levels settings screen showing template buttons for Basic, Eisenhower Matrix, ABC Method, and Now/Next/Later above a list of Urgent and important, Important but not urgent, Urgent but not important, and Not important and not urgent',
   },
   {
     num:     '5',
     caption: 'Add a task list within your tiles. Work through this list during the time slot you set. Mark each task complete when you’re done, and watch your productivity grow.',
-    image:   '/screenshots/planner-day.png',
-    alt:     'Planner day view for Thursday, June 11 showing Health, Work, and Family blocks with tasks and priority numbers',
+    image:   '/screenshots/planner-day.jpg',
+    alt:     'Planner day view for Sunday, September 20 showing Health, Household, and Family blocks with tasks, some completed, and priority numbers',
   },
 ]
 
-// Sourced from consented beta survey responses — see
-// tessera-landing/MARKETING-IDEAS.md for full context on each quote.
+// Sourced from consented beta survey responses only — see
+// tessera-landing/MARKETING-IDEAS.md's "Quote-usage consent" note. Only
+// Respondents 10-13 have recorded consent to use their quotes; don't pull
+// from an earlier respondent without confirming consent first.
 interface Testimonial {
   quote: string
 }
 
 const TESTIMONIALS: Testimonial[] = [
   {
-    quote: 'Instead of relying on scattered notes, calendar reminders, and to-do lists, I have a more structured way to keep track of my priorities and responsibilities.',
+    quote: 'My biggest frustration was that I was not being able to map out my day and life as efficiently as I am able to now.',
   },
   {
     quote: 'Helped me keep track and prioritize my tasks better, as well as calculate how much time I’m spending in each area.',
@@ -300,7 +302,7 @@ export default function Page() {
           - Keep everything all in one place, instead of scattered across a dozen different apps.
         </p>
         <div className="mt-10 w-full max-w-md">
-          <SignupForm />
+          <PlatformLinks />
         </div>
       </section>
 
@@ -490,18 +492,13 @@ export default function Page() {
             {WALKTHROUGH_STEPS.map(({ num, caption, image, alt, frame = 'phone' }, i) => (
               <div
                 key={num}
-                className={`flex flex-col items-center gap-10 ${i % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'}`}
+                className={`flex flex-col items-center gap-10 ${i % 2 === 1 ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
               >
-                <div className="flex-shrink-0">
-                  {frame === 'phone' ? (
-                    <PhoneFrame src={image} alt={alt} />
-                  ) : (
-                    <div style={{ width: 280, borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 64px rgba(58,63,204,0.25)', lineHeight: 0 }}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={image} alt={alt} style={{ width: '100%', display: 'block' }} />
-                    </div>
-                  )}
-                </div>
+                {/* Text renders first in DOM so the caption stacks above the
+                    screenshot on mobile (flex-col); the row/row-reverse
+                    classes above are inverted from a naive left-to-right
+                    reading to compensate, preserving the original alternating
+                    image/text sides on large screens. */}
                 <div className="flex-1 text-center lg:text-left">
                   <div
                     className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold mb-5 mx-auto lg:mx-0"
@@ -513,6 +510,16 @@ export default function Page() {
                     {caption}
                   </p>
                 </div>
+                <div className="flex-shrink-0">
+                  {frame === 'phone' ? (
+                    <PhoneFrame src={image} alt={alt} />
+                  ) : (
+                    <div style={{ width: 280, borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 64px rgba(58,63,204,0.25)', lineHeight: 0 }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={image} alt={alt} style={{ width: '100%', display: 'block' }} />
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -523,11 +530,14 @@ export default function Page() {
       <section className="py-24 px-6" style={{ backgroundColor: 'rgba(255,255,255,0.32)' }}>
         <div className="max-w-5xl mx-auto">
           <h2
-            className="text-3xl font-bold text-center mb-14"
+            className="text-3xl font-bold text-center mb-3"
             style={{ color: '#1C1C2E', letterSpacing: '-0.01em' }}
           >
             What beta testers are saying
           </h2>
+          <p className="text-center text-lg mb-14" style={{ color: '#5C5C7A' }}>
+            Especially resonant for anyone who struggles with time management and prioritizing their day.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {TESTIMONIALS.map(({ quote }) => (
               <div
@@ -567,14 +577,14 @@ export default function Page() {
             className="mt-7 text-3xl font-bold text-white leading-snug"
             style={{ letterSpacing: '-0.01em' }}
           >
-            Be the first to build<br />your mosaic.
+            Start building<br />your mosaic today.
           </h2>
           <p className="mt-4 text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.78)' }}>
-            Tessera is in private beta. Join the waitlist and you&apos;ll be among
-            the first to get access when we open the doors.
+            Tessera is in open beta. Install it now on iOS or Android
+            and start planning today.
           </p>
           <div className="mt-8 w-full">
-            <SignupForm dark />
+            <PlatformLinks dark />
           </div>
         </div>
       </section>
