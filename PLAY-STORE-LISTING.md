@@ -52,5 +52,5 @@ Productivity
 ## Notes / open items
 
 - **Quote consent**: the pull-quote above is from Respondent 13, who has recorded consent to use their quotes (see `MARKETING-IDEAS.md`'s "Quote-usage consent" note — only Respondents 10-13 are cleared). Don't swap in a different quote without checking that log first.
-- **Feature graphic (1024x500) is still missing.** Play Store requires this for the store listing and nothing in the repo covers it yet. Can be generated the same way as `tessera-landing/app/opengraph-image.tsx` (branded, on-brand colors, no external asset needed) — ask Claude to build it when ready.
+- **Feature graphic (1024x500)**: done — `play-store/feature-graphic.png` (logo, headline, and the Day view screenshot in a phone frame). Upload it under Play Console's Graphics section.
 - Screenshots for the actual Play Store listing should reuse the refreshed set in `tessera-landing/public/screenshots/` (updated 2026-09-20).
